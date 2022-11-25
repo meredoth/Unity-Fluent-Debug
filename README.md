@@ -6,7 +6,7 @@ Unity Fluent Debug is a wrapper over theUnity Debug with some additional functio
 
 Copy UnityFluentDebug folder to you Unity Assets folder.
 
-If you want speech support build the dll from the WindowsTTS folder and add the WindowsTTS.dll to your Unity Assets folder.
+If you want speech support, build the dll from the WindowsTTS folder and add the WindowsTTS.dll to your Unity Assets folder.
 
 ## Simple Usage
 
@@ -35,9 +35,9 @@ FDebug.If(x > 4).Log("x is grater than 4.")
       .If(y < 2).LogWarning("y is less than 2.");
 
 FDebug.Log("Waiting at the inn")
-      .If(barbarian.isnear).Log("A barbarian is near")
-      .AndIf(barbarian.attackMode == true).LogWarning("Watch out.")
-      .AndIf(barbarian.xpToNextLevel < 5f).LogError("We are going to die!").And().Say("Run for your lives.");
+      .If(barbarian.IsNear).Log("A barbarian is near.")
+      .AndIf(barbarian.AttackMode == AttackMode.Berserk).LogWarning("Watch out.")
+      .AndIf(barbarian.XPToNextLevel < 5f).LogError("We are going to die!").And().Say("Run for your lives.");
 ```
 
 # Advanced usage
@@ -47,7 +47,7 @@ Unity fluent debug supports some extra functionality like speech or avoiding the
 
 ## The FluentDebugFactory static class
 
-The FluentDebugFactory static class is your entry point you can create different debuggers by calling the ```FluentDebugFactory.Create()``` method:
+The FluentDebugFactory static class is your entry point. You can create different debuggers by calling the ```FluentDebugFactory.Create()``` method:
 
 ```cs
 FluentDebug myDebug = FluentDebugFactory.Create();
@@ -62,7 +62,7 @@ The WindowsTTs.dll provides speech only for the Windows x64 systems, it requires
 * MS language pack: [https://support.microsoft.com/en-us/help/14236/language-packs](https://support.microsoft.com/en-us/help/14236/language-packs)
 * MS TTS package: [https://support.office.com/en-us/article/how-to-download-text-to-speech-languages-for-windows-10-d5a6b612-b3ae-423f-afa5-4f6caf1ec5d3](https://support.office.com/en-us/article/how-to-download-text-to-speech-languages-for-windows-10-d5a6b612-b3ae-423f-afa5-4f6caf1ec5d3)
 
-uses modified code from the [https://github.com/VirtualityForSafety/UnityWindowsTTS] project.
+uses modified code from the [The UnityWindowsTTS project](https://github.com/VirtualityForSafety/UnityWindowsTTS).
 
 
 ```cs
@@ -102,7 +102,7 @@ This property returns true if the speech engine has been successfully initialize
 
 ## The Debuggers
 
-After you have created a debugger with the ```FluentDebugFactory.Create()``` method you can call all the usual methods from the Unity Debug class including the ```isDebugBuild``` , ```unityLogger``` and ```developerConsoleVisible``` commands that call the corresponding Unity Debug commands.
+After you have created a debugger with the ```FluentDebugFactory.Create()``` method you can call all the usual methods from the Unity Debug class including the ```isDebugBuild``` , ```unityLogger``` and ```developerConsoleVisible``` commands that call the same Unity Debug methods.
 
 There is also the ```Enabled``` boolean property which can be used to enable/disable only a specific debugger. For example you may have created two debuggers the ```myAIdebug``` for your AI system debugging and the ```myStatSystemDebug``` for your StatSystem Debugging. The command ```myAIdebug.Enabled = false``` will only disable the ```myAIdebug``` debugger, leaving only the ```myStatSystemDebug``` statements to be printed to the console (or heard, if you use the ```Say()``` statement and the speech engine is initialized).
 
@@ -136,7 +136,7 @@ If(Func<bool> condition)
 
 The next statement will be called if the condition is true. The overload ```If(Func<bool> condition)``` is useful to avoid the performance and boxing costs of expensive boolean expressions when you have disabled the debugger.
 
-In Unity the ```if(somethingExpensive) Debug...``` and in the Fluent Debugger the ```myDebug.If(somethingExpensive).Debug...``` cost performance for no reason when the debug is disabled because you pay the cost of calculating the ```somethingExpensive``` in the if statements anyway. With the ```If(Func<bool> condition)``` overload: ```If(() => {somethingExpensive;})``` the boolean expression ```somethingExpensive``` is not calculated if you have disabled the debugger.
+In Unity the ```if(somethingExpensive) Debug...``` and in the Fluent Debugger the ```myDebug.If(somethingExpensive).Debug...``` cost performance for no reason when the debug is disabled because you pay the cost of calculating the ```somethingExpensive``` in the if statements anyway. With the ```If(Func<bool> condition)``` overload: ```If(() => {return somethingExpensive;})``` the boolean expression ```somethingExpensive``` is not calculated if you have disabled the debugger.
 
 ```cs
 And()
@@ -193,19 +193,34 @@ citius
 fortius
 ```
 
+the overload ```AndIf(Func<bool> condition)``` serves the same purpose as the ```If(Func<bool> condition)``` overload.
+
+If the ```AndIf()``` methods are called without an ```If()``` method before them they behave as the ```If()``` methods.
+
+## Preprocessor Directives
+
+The DISABLE_FLUENT_DEBUG preprocessor directive added to project settings -> scripting define symbols in Unity will disable all Debuggers.
+
+## Unity console click
+
+The Unity Fluent Debug uses the ```[HideInCallstack]``` attribute so that a double click in the unity console will take you to your own script that calls the debug command. This attribute is supported only in versions of Unity 2022.2 or newer.
+
+In previous versions, if you want when you double click the unity console to be taken to your script instead in one of the Unity Fluent Debug scripts, compile the project in a DLL and put it in your assets folder.
+
+
 ## License
 
 This project is licensed under the [Apache-2.0](LICENSE.md)
 License - see the [LICENSE.md](LICENSE.md) file for
 details.
+()
+This project uses modified code from [The UnityWindowsTTS project](https://github.com/VirtualityForSafety/UnityWindowsTTS) by [Virtuality for Safety](https://github.com/VirtualityForSafety)
 
-This project uses modified code from [https://github.com/VirtualityForSafety/UnityWindowsTTS].
-
-The [https://github.com/VirtualityForSafety/UnityWindowsTTS] is licensed under the MIT License. See the [LICENSE.md](LICENSE.md) file for
+The [The UnityWindowsTTS project](https://github.com/VirtualityForSafety/UnityWindowsTTS) is licensed under the MIT License. See the [LICENSE.md](LICENSE.md) file for
 details.
 
 ## Acknowledgments
 
-The Speech Engine in this project is a modified version of the [https://github.com/VirtualityForSafety/UnityWindowsTTS] which is based on code from [Chad Weisshaar].(https://chadweisshaar.com/blog/) 
+The Speech Engine in this project is a modified version of the [https://github.com/VirtualityForSafety/UnityWindowsTTS](https://github.com/VirtualityForSafety/UnityWindowsTTS) by [Virtuality for Safety](https://github.com/VirtualityForSafety) which is based on code from [Chad Weisshaar](https://chadweisshaar.com/blog/)
 
 This source code was originally from [here](https://chadweisshaar.com/blog/2015/07/02/microsoft-speech-for-unity/)
