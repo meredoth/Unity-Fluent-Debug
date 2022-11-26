@@ -10,7 +10,7 @@ If you want speech support, build the dll from the WindowsTTS folder and add the
 
 ## Simple Usage
 
-Add the namespace with the following using statement
+Add the namespace with the following using statement:
 
 ```cs
 using UnityFluentDebug;
@@ -132,6 +132,39 @@ Say(string msg, bool clearPreviousMessages = false)
 ```
 
 If the speak engine is initialized, instead of writing in the debug console you will hear the msg through your speakers. the clearPreviousMessages boolean clears the queue of any previous messages so that you can hear the message the time this method is invoked, useful if you have a lot of messages that play, but you need to hear a specific message the time the say method is called.
+
+```cs
+Execute(Action method)
+```
+
+Executes the method provided as argument, for example:
+
+```cs
+int x = 0;
+
+private int foo(int i)
+{
+      Debug.Log("Hello from foo!");
+      return ++i;
+}
+
+myDebug.If(x == 0).Execute(() =>
+         {
+            x++;
+            x--;
+         })
+         .And().Execute(() => foo(x))
+         .AndIf(x == 0).Execute(() => x = foo(x))
+         .And().Log($"x is now {x.ToString()}");
+```
+
+will output in the console:
+
+```
+Hello from foo!
+Hello from foo!
+x is now 1
+```
 
 ### Conditions
 

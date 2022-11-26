@@ -10,12 +10,16 @@ public interface IFluentDebug
    public bool? LastCondition { get; }
    IFluentConditions FluentConditions { get; }
    IFluentStatements FluentStatements { get; }
+
+   #region DebugOverloads
+   
    IFluentConditions Assert(bool condition);
    IFluentConditions Assert(bool condition, Object context);
    IFluentConditions Assert(bool condition, object message);
    IFluentConditions Assert(bool condition, object message, Object context);
    IFluentConditions AssertFormat(bool condition, string format, params object[] args);
    IFluentConditions AssertFormat(bool condition, Object context, string format, params object[] args);
+   IFluentConditions Break();
    IFluentConditions ClearDeveloperConsole();
    IFluentConditions DrawLine(Vector3 start, Vector3 end, Color? nullableColor,
       float duration = 0.0f, bool depthTest = true);
@@ -41,12 +45,23 @@ public interface IFluentDebug
    IFluentConditions LogWarning(object message, Object context);
    IFluentConditions LogWarningFormat(string format, params object[] args);
    IFluentConditions LogWarningFormat(Object context, string format, params object[] args);
+   
+   #endregion
+   
+   #region DebugExtensions
+   
    IFluentConditions AssertNotNull(object obj, object message);
    IFluentConditions AssertNotNull(object obj, object message, Object context);
    IFluentConditions Say(string msg, bool clearPreviousMessages = false);
+   IFluentConditions Execute(Action method);
    
-   IFluentConditions Break();
+   #endregion
+
+   #region DebugConditionals
+   
    IFluentStatements If(bool condition);
    IFluentStatements If(Func<bool> condition);
+   
+   #endregion
 }
 }

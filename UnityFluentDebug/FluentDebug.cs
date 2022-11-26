@@ -507,6 +507,14 @@ public sealed class FluentDebug : IFluentDebug
       return FluentConditions;
    }
 
+   public IFluentConditions Execute(Action method)
+   {
+      if (Enabled && _condition)
+         method();
+
+      return FluentConditions;
+   }
+   
    #endregion DebugExtensions
 
    #region DebugContitionals

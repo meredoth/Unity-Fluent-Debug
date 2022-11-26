@@ -248,6 +248,8 @@ public sealed class FluentStatements : IFluentStatements
    public IFluentConditions Say(string msg, bool clearPreviousMessages = false) =>
       _fluentDebug.Say(msg, clearPreviousMessages);
 
+   public IFluentConditions Execute(Action method) => _fluentDebug.Execute(method);
+
    #endregion DebugExtensions
 }
 }
