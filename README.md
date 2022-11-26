@@ -10,6 +10,12 @@ If you want speech support, build the dll from the WindowsTTS folder and add the
 
 ## Simple Usage
 
+Add the namespace with the following using statement
+
+```cs
+using UnityFluentDebug;
+```
+
 The FluentDebugFactory is your entry point.
 
 Create a new fluent debugger with:
