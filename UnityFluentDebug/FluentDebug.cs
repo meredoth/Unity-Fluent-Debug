@@ -507,6 +507,11 @@ public sealed class FluentDebug : IFluentDebug
       return FluentConditions;
    }
 
+   #region
+#if UNITY_2022_2_OR_NEWER
+   [HideInCallstack]
+#endif
+   #endregion
    public IFluentConditions Execute(Action method)
    {
       if (Enabled && _condition)

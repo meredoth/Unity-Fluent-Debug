@@ -115,7 +115,6 @@ internal class SpeechEngine
 #endif
     }
     
-    [AOT.MonoPInvokeCallback(typeof(SpeechEngine))]
     private void Speak(string msg, bool clearPreviousMessages)
     {
 #if (UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN) && UNITY_64

@@ -248,6 +248,11 @@ public sealed class FluentStatements : IFluentStatements
    public IFluentConditions Say(string msg, bool clearPreviousMessages = false) =>
       _fluentDebug.Say(msg, clearPreviousMessages);
 
+   #region
+#if UNITY_2022_2_OR_NEWER
+   [HideInCallstack]
+#endif
+   #endregion
    public IFluentConditions Execute(Action method) => _fluentDebug.Execute(method);
 
    #endregion DebugExtensions
