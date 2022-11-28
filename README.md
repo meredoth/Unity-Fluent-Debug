@@ -166,6 +166,35 @@ Hello from foo!
 x is now 1
 ```
 
+The methods:
+```cs
+Enable()
+```
+
+```cs
+Disable()
+```
+
+will enable or disable the debugger like calling the ```Enabled``` property but obey the rules for the statements that get executed only if the proceeding if condition is true, for example:
+
+```cs
+myDebug.If(true).Log("message 1").
+        If(false).Disable().
+        If(true).Log("message2").
+        If(true).Log("message 3").And().Disable().
+        If(true).Log("message 4").
+        If(true).Enable().And().Log("message 5");
+```
+
+will output to the console:
+
+```
+message 1
+message 2
+message 3
+message 5
+```
+
 ### Conditions
 
 ```cs

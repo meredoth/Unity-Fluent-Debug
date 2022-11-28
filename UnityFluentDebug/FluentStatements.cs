@@ -255,6 +255,10 @@ public sealed class FluentStatements : IFluentStatements
    #endregion
    public IFluentConditions Execute(Action method) => _fluentDebug.Execute(method);
 
+   public IFluentConditions Enable() => _fluentDebug.Enable();
+
+   public IFluentConditions Disable() => _fluentDebug.Disable();
+
    #endregion DebugExtensions
 }
 }

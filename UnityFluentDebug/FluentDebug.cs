@@ -519,6 +519,22 @@ public sealed class FluentDebug : IFluentDebug
 
       return FluentConditions;
    }
+
+   public IFluentConditions Enable()
+   {
+      if(_condition)
+         Enabled = true;
+      
+      return FluentConditions;
+   }
+   
+   public IFluentConditions Disable()
+   {
+      if(_condition)
+         Enabled = false;
+      
+      return FluentConditions;
+   }
    
    #endregion DebugExtensions
 

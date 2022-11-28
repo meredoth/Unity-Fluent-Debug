@@ -54,6 +54,8 @@ public interface IFluentDebug
    IFluentConditions AssertNotNull(object obj, object message, Object context);
    IFluentConditions Say(string msg, bool clearPreviousMessages = false);
    IFluentConditions Execute(Action method);
+   IFluentConditions Enable();
+   IFluentConditions Disable();
    
    #endregion
 
