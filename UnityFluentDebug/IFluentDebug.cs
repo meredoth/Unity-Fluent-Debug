@@ -56,6 +56,7 @@ public interface IFluentDebug
    IFluentConditions Execute(Action method);
    IFluentConditions Enable();
    IFluentConditions Disable();
+   IFluentConditions PlayAudioClip(AudioClip clip, Vector3 position);
    
    #endregion
 

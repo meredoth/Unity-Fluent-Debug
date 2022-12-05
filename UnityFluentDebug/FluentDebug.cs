@@ -515,7 +515,7 @@ public sealed class FluentDebug : IFluentDebug
    public IFluentConditions Execute(Action method)
    {
       if (Enabled && _condition)
-         method();
+         method?.Invoke();
 
       return FluentConditions;
    }
@@ -532,6 +532,14 @@ public sealed class FluentDebug : IFluentDebug
    {
       if(_condition)
          Enabled = false;
+      
+      return FluentConditions;
+   }
+
+   public IFluentConditions PlayAudioClip(AudioClip clip, Vector3 position)
+   {
+      if(_condition)
+         AudioSource.PlayClipAtPoint(clip, position);
       
       return FluentConditions;
    }
