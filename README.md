@@ -1,6 +1,22 @@
 # Unity Fluent Debug
 
-Unity Fluent Debug is a wrapper over theUnity Debug with some additional functionality using fluent syntax.
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Made For Unity](https://img.shields.io/badge/Made%20for-Unity-blue)](https://unity3d.com)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-brightgreen.svg)](https://github.com/meredoth/Unity-Fluent-Debug/graphs/commit-activity)
+
+* A wrapper over Unity Debug with some additional functionality. Using fluent syntax supports infinite chaining of debug conditions and statements to display different messages in the console log depending on the state of your game.
+
+* Supports creating different debuggers and enabling/disabling them depending on your situation (for example you may want to keep you debug logs for your AI enabled but have you debug logs for your stat system disabled).
+
+* Uses conditions to log debug information and increase performance by not calling debug logs when conditions are false, not calculating expensive boolean logic returned by methods or logging any debug messages when your debug is disabled.
+  
+* Supports a global preprocessor directive to exclude all debug calls from your builds instead of having to comment them out or erase them each time you make a production build to gain performance.
+
+* Comes with extra extension methods besides the usual Unity's debug methods, like support for speech for windows x64 systems, null checking statements and Execute a method extension after a condition is true.
+
+* Supports complex condition chaining like If -> statement -> Andif -> statement and statement (see examples)
+
+---
 
 ## Getting Started
 
@@ -21,13 +37,13 @@ The FluentDebugFactory is your entry point.
 Create a new fluent debugger with:
 
 ```cs
-private readonly FluentDebug FDebug = FluentDebugFactory.Create();
+private readonly FluentDebug myDebug = FluentDebugFactory.Create();
 ```
 
-then use FDebug as you would use the Debug class in unity:
+then use myDebug as you would use the Debug class in unity:
 
 ```cs
-FDebug.Log("Hello World!");
+myDebug.Log("Hello World!");
 ```
 
 ### Syntax
@@ -35,21 +51,22 @@ FDebug.Log("Hello World!");
 Unity Fluent Debug supports fluent syntax, you can chain statements and conditions:
 
 ```cs
-FDebug.If(x > 69).Log("x is grater than 69.");
+myDebug.If(x > 69).Log("x is grater than 69.");
 
-FDebug.If(x > 4).Log("x is grater than 4.")
-      .If(y < 2).LogWarning("y is less than 2.");
+myDebug.If(x > 4).Log("x is grater than 4.").
+        If(y < 2).LogWarning("y is less than 2.");
 
-FDebug.Log("Waiting at the inn")
-      .If(barbarian.IsNear).Log("A barbarian is near.")
-      .AndIf(barbarian.AttackMode == AttackMode.Berserk).LogWarning("Watch out.")
-      .AndIf(barbarian.XPToNextLevel < 5f).LogError("We are going to die!").And().Say("Run for your lives.");
+myDebug.Log("Waiting at the inn").
+        If(barbarian.IsNear).Log("A barbarian is near.").
+        AndIf(barbarian.AttackMode == AttackMode.Berserk).LogWarning("Watch out.").
+        AndIf(barbarian.XPToNextLevel < 5f).LogError("We are going to die!").And().Say("Run for your lives.");
 ```
 
-# Advanced usage
+---
+
+## Advanced usage
 
 Unity fluent debug supports some extra functionality like speech or avoiding the evaluation of conditions when you have disabled the fluentDebugger.
-
 
 ## The FluentDebugFactory static class
 
@@ -70,13 +87,11 @@ The WindowsTTs.dll provides speech only for the Windows x64 systems, it requires
 
 uses modified code from the [The UnityWindowsTTS project](https://github.com/VirtualityForSafety/UnityWindowsTTS).
 
-
 ```cs
 FluentDebugFactory.InitializeSpeechEngine();
 ```
 
 Initializes the speech engine. If you want speech this has to be called before using the ```Say()``` method.
-
 
 ```cs
 FluentDebugFactory.UnloadSpeechEngine();
@@ -84,13 +99,11 @@ FluentDebugFactory.UnloadSpeechEngine();
 
 Unloads the speech engine. You don't need to call this as it gets automatically called every time you exit the play mode.
 
-
 ```cs
 FluentDebugFactory.SelectVoice(int idx);
 ```
 
 changes the voice of the speech engine, depending on the voices you have installed on your machine.
-
 
 ```cs
 bool FluentDebugFactory.IsSpeaking;
@@ -98,13 +111,13 @@ bool FluentDebugFactory.IsSpeaking;
 
 This property returns true while the speech engine is speaking.
 
-
 ```cs
 bool FluentDebugFactory.IsSpeechEngineInitialized;
 ```
+
 This property returns true if the speech engine has been successfully initialized.
 
-#
+---
 
 ## The Debuggers
 
@@ -152,21 +165,22 @@ myDebug.If(x == 0).Execute(() =>
          {
             x++;
             x--;
-         })
-         .And().Execute(() => foo(x))
-         .AndIf(x == 0).Execute(() => x = foo(x))
-         .And().Log($"x is now {x.ToString()}");
+         }).
+         And().Execute(() => foo(x)).
+         AndIf(x == 0).Execute(() => x = foo(x)).
+         And().Log($"x is now {x.ToString()}");
 ```
 
 will output in the console:
 
-```
+```none
 Hello from foo!
 Hello from foo!
 x is now 1
 ```
 
 The methods:
+
 ```cs
 Enable()
 ```
@@ -188,12 +202,28 @@ myDebug.If(true).Log("message 1").
 
 will output to the console:
 
-```
+```none
 message 1
 message 2
 message 3
 message 5
 ```
+
+The method:
+
+```cs
+PlayAudioClip(AudioClip clip, Vector3 position)
+```
+
+is a wrapper over Unity's
+
+```cs
+PlayClipAtPoint(AudioClip clip, Vector3 position, float volume = 1.0F);
+```
+
+method.
+
+---
 
 ### Conditions
 
@@ -210,7 +240,7 @@ In Unity the ```if(somethingExpensive) Debug...``` and in the Fluent Debugger th
 And()
 ```
 
-Use the ```And()``` method to add to statements together so both of them are only executed if the ```If()``` expression before them was true. For example:
+Use the ```And()``` method to add statements together so both of them are only executed if the ```If()``` expression before them was true. For example:
 
 ```cs
 myDebug.If( people > 420 ).LogWarning("Hello World").And().Say("Hello Everyone");
@@ -226,48 +256,59 @@ AndIf(Func<bool> condition)
 The ```AndIf()``` method adds a condition that executes the following statement only if the previous condition was true. For example:
 
 ```cs
-myDebug.If(true).Log("citious").AndIf(true).Log("altius").AndIf(true).Log("fortius");
-```
-
-will print to the console: 
-
-```
-citius 
-altius 
-fortius
-```
-and
-
-```cs
-myDebug.If(true).Log("citious").AndIf(false).Log("altius").AndIf(true).Log("fortius");
+myDebug.If(true).Log("citious").
+        AndIf(true).Log("altius").
+        AndIf(true).Log("fortius");
 ```
 
 will print to the console:
 
+```none
+citius 
+altius 
+fortius
 ```
+
+and
+
+```cs
+myDebug.If(true).Log("citious").
+        AndIf(false).Log("altius").
+        AndIf(true).Log("fortius");
+```
+
+will print to the console:
+
+```none
 citius 
 ```
 
 but
 
 ```cs
-myDebug.If(true).Log("citious").If(false).Log("altius").If(true).Log("fortius");
+myDebug.If(true).Log("citious").
+        If(false).Log("altius").
+        uIf(true).Log("fortius");
 ```
 
 will print to the console:
 
-```
+```none
 citius 
 fortius
 ```
 
 the overload ```AndIf(Func<bool> condition)``` serves the same purpose as the ```If(Func<bool> condition)``` overload.
 
-If the ```AndIf()``` methods are called without an ```If()``` method before them they behave as the ```If()``` methods.
+If the ```AndIf()``` method is called without an ```If()``` method before them they behave as the ```If()``` methods.
+
+---
 
 ## Preprocessor Directives
 
 The DISABLE_FLUENT_DEBUG preprocessor directive added to project settings -> scripting define symbols in Unity will disable all Debuggers.
+
+---
 
 ## Unity console click
 
@@ -275,6 +316,7 @@ The Unity Fluent Debug uses the ```[HideInCallstack]``` attribute so that a doub
 
 In previous versions, if you want when you double click the unity console to be taken to your script instead in one of the Unity Fluent Debug scripts, compile the project in a DLL and put it in your assets folder.
 
+---
 
 ## License
 
@@ -286,6 +328,8 @@ This project uses modified code from [The UnityWindowsTTS project](https://githu
 
 The [The UnityWindowsTTS project](https://github.com/VirtualityForSafety/UnityWindowsTTS) is licensed under the MIT License. See the [LICENSE.md](LICENSE.md) file for
 details.
+
+---
 
 ## Acknowledgments
 
