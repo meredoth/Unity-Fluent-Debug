@@ -536,10 +536,10 @@ public sealed class FluentDebug : IFluentDebug
       return FluentConditions;
    }
 
-   public IFluentConditions PlayAudioClip(AudioClip clip, Vector3 position)
+   public IFluentConditions PlayAudioClip(AudioClip clip, Vector3 position, float volume = 1.0f)
    {
       if(Enabled && _condition)
-         AudioSource.PlayClipAtPoint(clip, position);
+         AudioSource.PlayClipAtPoint(clip, position, volume);
       
       return FluentConditions;
    }

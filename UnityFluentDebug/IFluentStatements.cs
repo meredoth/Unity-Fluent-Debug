@@ -44,6 +44,6 @@ public interface IFluentStatements
    IFluentConditions Execute(Action method);
    IFluentConditions Enable();
    IFluentConditions Disable();
-   IFluentConditions PlayAudioClip(AudioClip clip, Vector3 position);
+   IFluentConditions PlayAudioClip(AudioClip clip, Vector3 position, float volume);
 }
 }

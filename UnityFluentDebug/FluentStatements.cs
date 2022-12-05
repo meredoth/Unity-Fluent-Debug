@@ -259,8 +259,8 @@ public sealed class FluentStatements : IFluentStatements
 
    public IFluentConditions Disable() => _fluentDebug.Disable();
 
-   public IFluentConditions PlayAudioClip(AudioClip clip, Vector3 position) =>
-      _fluentDebug.PlayAudioClip(clip, position);
+   public IFluentConditions PlayAudioClip(AudioClip clip, Vector3 position, float volume = 1.0f) =>
+      _fluentDebug.PlayAudioClip(clip, position, volume);
 
    #endregion DebugExtensions
 }
